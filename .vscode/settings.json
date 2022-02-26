@@ -1,0 +1,18 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.tabSize": 2,
+  "eslint.lintTask.enable": true,
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "javascript.preferences.importModuleSpecifierEnding": "js"
+}

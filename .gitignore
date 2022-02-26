@@ -1,0 +1,8 @@
+# npm
+/node_modules
+
+# environment variable file
+.env
+
+# macOS related file
+.DS_store

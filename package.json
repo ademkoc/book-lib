@@ -1,0 +1,37 @@
+{
+  "name": "ademkoc-case-question",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Back-end developer case question project for Invent Analytics",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">= 16",
+    "npm": ">= 8",
+    "yarn": "please-use-npm"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint": "eslint --ext .js ./src",
+    "lint:fix": "eslint --fix --ext .js ./src",
+    "knex:migrate:make": "knex --knexfile src/knexfile.js migrate:make",
+    "knex:migrate:latest": "knex --knexfile src/knexfile.js migrate:latest",
+    "knex:migrate:rollback": "knex --knexfile src/knexfile.js migrate:rollback",
+    "knex:migrate:unlock": "knex --knexfile src/knexfile.js migrate:unlock"
+  },
+  "keywords": [],
+  "author": "Adem KOC",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.19.2",
+    "cors": "2.8.5",
+    "express": "4.17.3",
+    "knex": "1.0.3",
+    "mysql2": "2.3.3"
+  },
+  "devDependencies": {
+    "eslint": "8.3.0",
+    "knex": "1.0.3",
+    "nodemon": "2.0.15"
+  }
+}
