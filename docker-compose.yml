@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  api-database:
+    image: "mysql:8.0.28"
+    container_name: ademkoc-db-container
+    environment:
+      MYSQL_DATABASE: "book-lib"
+      MYSQL_USER: "z5aqhspgnqim"
+      MYSQL_PASSWORD: "YKphIYQka0CFZIbOFZrfgPQ8QTcL6fAIH33WxPwjoI"
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    networks:
+      - webnet
+
+  api:
+    build: .
+    image: ademkoc-case-solution
+    ports:
+      - "3000:3000"
+    container_name: ademkoc-api-container
+    command: bash -c "/usr/wait-for-it.sh --timeout=0 api-database:3306 && npm run-script knex:migrate:latest && npm run start"
+    networks:
+      - webnet
+    depends_on:
+      - api-database
+
+networks:
+  webnet:
