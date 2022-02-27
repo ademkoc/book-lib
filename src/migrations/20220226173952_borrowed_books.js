@@ -1,9 +1,10 @@
 export async function up(knex) {
-  await knex.schema.createTable("user_books", function (table) {
+  await knex.schema.createTable("borrowed_books", function (table) {
     table.increments("id");
     table.integer("user_id").unsigned().notNullable();
     table.integer("book_id").unsigned().notNullable();
-    table.date("return_date").notNullable();
+    table.float("given_score").notNullable();
+    table.date("return_date");
     table.boolean("is_book_returned").notNullable();
     table.timestamp("created_at").notNullable();
     table.timestamp("modified_at").notNullable();
@@ -13,5 +14,5 @@ export async function up(knex) {
 }
 
 export async function down(knex) {
-  await knex.schema.dropTable("user_books");
+  await knex.schema.dropTable("borrowed_books");
 }
