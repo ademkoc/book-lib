@@ -17,8 +17,13 @@ app.use(
 
 app.use(...routes);
 
-app.use((error, request, response, next) => {
+app.use(function (error, request, response, next) {
+  if (process.NODE_ENV !== "production") {
+    console.error(error);
+  }
+
   response.status(error.status || 500);
+
   const errors = {
     status: error.status,
     message: error.message,
