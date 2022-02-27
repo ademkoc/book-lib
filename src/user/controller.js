@@ -1,6 +1,10 @@
 /**
  * User Controller
  */
+import createError from "http-errors";
+
+import * as userService from "./service.js";
+import * as bookService from "../book/service.js";
 
 export default {
   /**
@@ -8,7 +12,7 @@ export default {
    * Return all users
    */
   index: async function (request, response) {
-    return response.send("index");
+    return response.json(await userService.findAll());
   },
 
   /**
@@ -16,30 +20,20 @@ export default {
    * Create an user
    */
   create: async function (request, response) {
-    return response.send("create");
+    const body = request.body;
+    await userService.create({
+      name: body.name,
+    });
+
+    return response.status(201).end();
   },
 
   /**
-   * GET:/user/:userid
+   * GET:/user/:userId
    * Return single user
    */
   show: async function (request, response) {
-    return response.send("show");
-  },
-
-  /**
-   * POST:/users/:userid/borrow/:bookid
-   * Borrow a book
-   */
-  borrow: async function (request, response) {
-    return response.send("borrow");
-  },
-
-  /**
-   * POST:/users/:userid/return/:bookid
-   * Return a book
-   */
-  return: async function (request, response) {
-    return response.send("return");
+    const user = await userService.findByIdWithBooks(request.params.userId);
+    return response.json(user);
   },
 };

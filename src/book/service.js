@@ -1,5 +1,8 @@
-import createError from "http-erros";
-import { knex } from "../knex";
+import createError from "http-errors";
+
+import { knex } from "../knex.js";
+
+import * as bookBorrowService from "../book_borrow/service.js";
 
 export async function findAll() {
   const records = await knex.select().from("books");
@@ -16,9 +19,16 @@ export async function findById(id) {
   return mapRecord(records[0]);
 }
 
+export async function findByIdWithAverageScore(id) {
+  const record = await findById(id);
+  return findAverageBookScore(record);
+}
+
 export async function create(book) {
   const result = await knex("books").insert({
     name: book.name,
+    score: -1,
+    is_available: true,
     created_at: new Date(),
     modified_at: new Date(),
   });
@@ -31,10 +41,27 @@ export async function create(book) {
   };
 }
 
-export async function update(book) {
+export async function findAverageBookScore(book) {
+  const records = await knex
+    .select("book_id as id")
+    .from("borrowed_books")
+    .where({ book_id: book.id })
+    .avg("given_score as averageScore")
+    .groupBy("book_id");
+
+  if (records.length === 0) {
+    return mapRecord({ ...book, score: -1 });
+  }
+
+  return mapRecord({ ...book, score: records[0].averageScore });
+}
+
+export async function updateStatus(book) {
   await knex("books")
     .update({
       name: book.name,
+      score: book.score,
+      is_available: !book.isAvailable,
       modified_at: new Date(),
     })
     .where({ id: book.id });
@@ -44,7 +71,16 @@ function mapRecord(input) {
   return {
     id: input.id,
     name: input.name,
-    createdAt: input.created_at,
-    modifiedAt: input.modified_at,
+    score: input.score,
+    isAvailable: !!input.is_available,
+    toResponse: () => ({
+      id: input.id,
+      name: input.name,
+      score: input.score,
+    }),
+    toSimpleResponse: () => ({
+      id: input.id,
+      name: input.name,
+    }),
   };
 }

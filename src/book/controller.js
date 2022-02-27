@@ -1,6 +1,7 @@
 /**
  * Book Controller
  */
+import * as bookService from "./service.js";
 
 export default {
   /**
@@ -8,7 +9,8 @@ export default {
    * Return all books
    */
   index: async function (request, response) {
-    return response.send("index");
+    const books = await bookService.findAll();
+    return response.json(books.map((book) => book.toSimpleResponse()));
   },
 
   /**
@@ -16,14 +18,20 @@ export default {
    * Create an book
    */
   create: async function (request, response) {
-    return response.send("create");
+    const body = request.body;
+    await bookService.create({
+      name: body.name,
+    });
+
+    return response.status(201).end();
   },
 
   /**
-   * GET:/book/:itemid
+   * GET:/book/:bookId
    * Return single book
    */
   show: async function (request, response) {
-    return response.send("show");
+    const user = await bookService.findById(request.params.bookId);
+    return response.json(user.toResponse());
   },
 };

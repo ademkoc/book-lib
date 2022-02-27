@@ -1,5 +1,9 @@
-import createError from "http-erros";
-import { knex } from "../knex";
+import createError from "http-errors";
+import { knex } from "../knex.js";
+
+// import * as bookService from "../book/service.js";
+// import * as userService from "../user/service.js";
+import * as bookBorrowService from "../book_borrow/service.js";
 
 export async function findAll() {
   const records = await knex.select().from("users");
@@ -14,6 +18,12 @@ export async function findById(id) {
   }
 
   return mapRecord(records[0]);
+}
+
+export async function findByIdWithBooks(id) {
+  const record = await findById(id);
+  const userBorrowedBooks = await bookBorrowService.findByUser(record);
+  return mapUser(record, userBorrowedBooks);
 }
 
 export async function create(user) {
@@ -44,7 +54,23 @@ function mapRecord(input) {
   return {
     id: input.id,
     name: input.name,
-    createdAt: input.created_at,
-    modifiedAt: input.modified_at,
+  };
+}
+
+function mapUser(user, borrowBooks = []) {
+  return {
+    id: user.id,
+    name: user.name,
+    books: {
+      past: borrowBooks
+        .filter((borrowBook) => borrowBook.isReturned === true)
+        .map((borrowBook) => ({
+          name: borrowBook.book.name,
+          userScore: borrowBook.givenScore,
+        })),
+      present: borrowBooks
+        .filter((borrowBook) => borrowBook.isReturned === false)
+        .map((borrowBook) => ({ name: borrowBook.book.name })),
+    },
   };
 }
