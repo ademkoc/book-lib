@@ -28,7 +28,10 @@
     "express": "4.17.3",
     "http-errors": "2.0.0",
     "knex": "1.0.3",
-    "mysql2": "2.3.3"
+    "mysql2": "2.3.3",
+    "ajv": "8.10.0",
+    "ajv-formats": "2.1.1",
+    "@stoplight/better-ajv-errors": "1.0.1"
   },
   "devDependencies": {
     "eslint": "8.3.0",
